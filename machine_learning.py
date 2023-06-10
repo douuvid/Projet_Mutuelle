@@ -83,7 +83,9 @@ predictions = lr.predict(X_test_cv)
 
 print(predictions)
 
-df = pd.DataFrame(metrics.confusion_matrix(y_test,predictions), index=["Null","hospitalisation","soins courants","aides auditives","optique","dentaire","medecine douce","fonds social","service"], columns=["Null","hospitalisation","soins courants","aides auditives","optique","dentaire","medecine douce","fonds social","service"])
+df = pd.DataFrame(metrics.confusion_matrix(y_test,predictions), 
+    index=["Null","hospitalisation","soins courants","aides auditives","optique","dentaire","medecine douce","fonds social","service"],
+    columns=["Null","hospitalisation","soins courants","aides auditives","optique","dentaire","medecine douce","fonds social","service"])
 
 print(df)
     

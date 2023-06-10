@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "deft-waters-388917",
+  "private_key_id": "1fda89fba5b6c1d23f06840b7ba3d391e0d604ec",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCxcb1WPnccUHaB\nl+RcpYPAL9u/Vzl5p6AyiaN1/zPnItaKcSPGAYGpNcUWgq2tgHfux30A0euN3kdr\nAXdcUWg6jS5EUXWtfagrh0fZSdr2uewY5qgfW3r3eqvRSTil15Kq8H7EHQ5KB9Hh\nj/OEJsdqz4lHatWTDXs5I7uVFKNfkWQlTwmb8CoiwvBsj9KLiRQ8+EWE5mESwLZD\nk8OjF8Z4asNeBuGJrOurQai/QsuxpnIRT9qDFkmSZ/YYWaZuKKDypMslcW7JcjsJ\nVcKTr42zgR4ZvJp4WniER7yoSskcq73k+8yyfO4oJ4rYXO/GWkE+onKtkatX51QH\nb9jZxJgRAgMBAAECggEAIxzfOxg8SLGRab6NVVn5UsgFo3zWpkCp3iZHXtujwSqv\nKpEN46o7pqi5ueUdChbAZNM75LQleRrRphaRsIZ5ahCy5Zj7ANw7MXXhHVnUhvsu\ngZTvEtlu4Vb4df8XwxV/8+yIITWgtLyMZyatqOpljrjHsQaugZ1q01lDTtJZK9lM\neAOBW+D6j5YDOp0l1NrMpVadYG0WRNI5LHod8MVdgTrEcDXc0s1HLL5K6MTimrLX\nBxf8FD07e1QqEzj8Nv9sb3LbsQu9gN15mFdf2xS8aK8f061yodbDHOrMDvl3qr+R\nVrvm9Tqm7DmqrUANOA5w5m0F9+ZIoRZSXQaIW0aD+wKBgQDfFrAlQIaaGZrFXSps\nR8Tj+ao6RVU33iJGsF3HWkAezAy/DxjUxjT98WtjrG0iU6eIvtSKbS34xeEaJx/y\n1waQ3O0KWCGBn7hyZxgwDBRkNv0l62hLuBir2XiNGiZiu6syO/kPZ0vjaK1QhFVu\nIOGGMoe2nuGlA8M5r3SRAAKGowKBgQDLnze7iWj7Q09WF1WFBRGwNLY1WmyZLuyM\nNEPTMBKGRWg9KQ1vnnGfQim87LNipX7h3JprfYb2d4NT2yKOtMy8xitKFjG0CvYN\nGJ9rnOdmD4KCKyBBsnX0MXz6eoAPeoL6D5NhqtIMp8IGUIpp7SysOZ3o8CeM+o0m\nqh9RkQm1uwKBgQCmmxsRtw7PJzAfFWUJWNACMgKfYggyoQKYKD7hEtWwKlOanHu+\n7AfHXvUEi1E1waPszBePCdq7X4ytK2sAwPV2WofsocTkOZRWXAgEWgEglrCYESbi\n5aoHLXKKbm0cb2t7KK7oggx62UIWT749cPD8d+BC0oVR5211N0OmxoscYQKBgFAt\nu7Ze3zXBRWYy/fvJCTQHLZBIsOaIsaBrnCF2lnTEs80Rczb2fuslFGZOFjzLyfCJ\n+0xEO3aljNLiQPNMgin7JmSf5KZugoCZp3yqZfusM8mpzaPQ791d90ZyIib2KMjq\nhTA6IUfWbvIpmLcpKyQN8/4bQpeiuR32cyqdH+OtAoGBAN2/uwIGmwZt5MF7bBJS\nWGdwVlKOIqGkgvGPW23S1NZDQHBb58l3r3DO2IQP0xsUD+bAvqBDBLVvVCcNeVif\nN+iNeNCmRA6sKXky1vdhkWKU6ZQeYmCwM9QjETz3cRuJXPsz2bcsTAdmlBRljq/e\ntmIOGye3C7ICQbnPAzW4Ah8N\n-----END PRIVATE KEY-----\n",
+  "client_email": "mutuelle@deft-waters-388917.iam.gserviceaccount.com",
+  "client_id": "116448077198879829603",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mutuelle%40deft-waters-388917.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
