@@ -168,7 +168,7 @@ def determine_document_type(word_list):
             "assurance voyage" : 0.6,
             "assurance responsabilité professionnelle" : 0.7
         },
-        # Autres mots clés pour le contrat IARD...
+        
     }
 
     mots_cles_contrat_assurance_vie = {
@@ -288,7 +288,12 @@ def process_document(file_name):
         extracted_text = extract_text_and_tables(ocr_file_path, file_path)
 
         # Analyse des mots
+        
         word_list = test_by_word(extracted_text, file_name)
+        if word_list == None:
+            raise ValueError("Erreur lors de l'analyse par mot.")
+
+        
 
         # Détermination du type de document
         document_type = determine_document_type(word_list)
@@ -309,7 +314,7 @@ def process_document(file_name):
                 print("")
                 break
             except UnicodeDecodeError:
-                continue
+                return word_list
 
     except UnicodeDecodeError as e:
         print(f"Erreur de décodage : {file_name} - {e}")
@@ -333,10 +338,44 @@ def remove_stopwords(text):
 
 
 
-file_names = ['etude_tarifaire_sante_logo_(1).pdf']
+file_names = ['etude_tarifaire_sante_logo_(1).pdf','etude_tarifaire_sante_logo_(2).pdf']
 
 for file_name in file_names:
-    process_document(file_name)
+     process_document(file_name)
+    
     
 
+
+
+## Il faut fare un contrat qui compare deux contrats entre par type de contrat 
+## Pour qu'on puisse comparer des des banane avec des banane 
+
+
+
+
+# def compare_type_contrat(file_names):
+#     types_contrat = {}  # Dictionnaire pour regrouper les contrats par type
+    
+#     for file_name in file_names:
+#         contrat_type = determine_document_type(file_name)
+        
+#         if contrat_type in types_contrat:
+#             types_contrat[contrat_type].append(file_name)
+#         else:
+#             types_contrat[contrat_type] = [file_name]
+    
+#     for contrat_type, contrats in types_contrat.items():
+#         print(f"Type de contrat : {contrat_type}")
+#         print(f"Contrats : {contrats}")
+#         print("--------------------")
+
+
+
+# Traitement de chaque document
+# for file_name in file_names:
+#     process_document(file_name)
+    
+
+# Comparaison des contrats par type
+#compare_type_contrat(file_names)
 
