@@ -124,9 +124,11 @@ et renvoie le type de document le plus probable.
 """
 
 
+
+
 def determine_document_type(word_list):
     mots_cles_contrat_sante = {
-        "soins": {
+        "Particulier": {
             "hospitalisation": 0.9,
             "consultation": 0.7,
             "médecin": 0.8,
@@ -134,18 +136,37 @@ def determine_document_type(word_list):
             "chirurgie": 0.7,
             "médicaments": 0.6,
             "frais médicaux": 0.7,
-            "remboursement" : 0.7,
-            "assurance maladie" : 0.8,
-            "garantie" : 0.6,
-            "couverture" : 0.7,
-            "mutuelle" : 0.6,
-            "pharmacie" : 0.6,
-            "hospitalier" : 0.7,
-            "maternité" : 0.6,
-            "dentaire" : 0.6,
-            "optique" : 0.6
+            "remboursement": 0.7,
+            "assurance maladie": 0.8,
+            "garantie": 0.6,
+            "couverture": 0.7,
+            "mutuelle": 0.6,
+            "pharmacie": 0.6,
+            "hospitalier": 0.7,
+            "maternité": 0.6,
+            "dentaire": 0.6,
+            "optique": 0.6,
         },
-        # Autres mots clés pour le contrat santé...
+        "professionnels": {
+            "salariés": 10,
+            "entreprise": 10,
+            "hospitalisation": 0.9,
+            "consultation": 0.7,
+            "médecin": 0.8,
+            "spécialiste": 0.8,
+            "chirurgie": 0.7,
+            "médicaments": 0.6,
+            "frais médicaux": 0.7,
+            "remboursement": 0.7,
+            "assurance maladie": 0.8,
+            "garantie": 0.6,
+            "couverture": 0.7,
+            "mutuelle": 0.6,
+            "pharmacie": 0.6,
+            "hospitalier": 0.7,
+            "dentaire": 0.6,
+            "optique": 0.6,
+        },
     }
 
     mots_cles_contrat_iard = {
@@ -168,7 +189,6 @@ def determine_document_type(word_list):
             "assurance voyage" : 0.6,
             "assurance responsabilité professionnelle" : 0.7
         },
-        
     }
 
     mots_cles_contrat_assurance_vie = {
@@ -187,46 +207,54 @@ def determine_document_type(word_list):
             "transmission" : 0.7,
             "fiscalité": 0.6
         },
-        # Autres mots clés pour le contrat d'assurance vie...
     }
 
     contrat_sante_score = 0
     contrat_iard_score = 0
     contrat_assurance_vie_score = 0
+    contrat_sante_part_score = 0
+    contrat_sante_pro_score = 0
+
+    if word_list is None:
+        return None
 
     for word, percentage in word_list:
         for contrat_type, mots_cles in mots_cles_contrat_sante.items():
-            for mot_cle, score in mots_cles.items():
-                if word.lower() == mot_cle.lower():
-                    contrat_sante_score += percentage * score
+            if word.lower() in mots_cles:
+                score = mots_cles[word.lower()]
+                contrat_sante_score += percentage * score
+                if contrat_type == "Particulier":
+                    contrat_sante_part_score += percentage * score
+                elif contrat_type == "professionnels":
+                    contrat_sante_pro_score += percentage * score
 
-        for contrat_type, mots_cles in mots_cles_contrat_iard.items():
-            for mot_cle, score in mots_cles.items():
-                if word.lower() == mot_cle.lower():
-                    contrat_iard_score += percentage * score
+        for mots_cles in mots_cles_contrat_iard.values():
+            if word.lower() in mots_cles:
+                score = mots_cles[word.lower()]
+                contrat_iard_score += percentage * score
 
-        for contrat_type, mots_cles in mots_cles_contrat_assurance_vie.items():
-            for mot_cle, score in mots_cles.items():
-                if word.lower() == mot_cle.lower():
-                    contrat_assurance_vie_score += percentage * score
-                    
-        
-        
-        
+        for mots_cles in mots_cles_contrat_assurance_vie.values():
+            if word.lower() in mots_cles:
+                score = mots_cles[word.lower()]
+                contrat_assurance_vie_score += percentage * score
 
     print(f"Score contrat santé: {contrat_sante_score}")
     print(f"Score contrat IARD: {contrat_iard_score}")
     print(f"Score contrat assurance vie: {contrat_assurance_vie_score}")
 
-    if contrat_sante_score > contrat_iard_score and contrat_sante_score > contrat_assurance_vie_score:
-        return "Contrat Santé"
+    if contrat_sante_score > 0:
+        if contrat_sante_part_score > contrat_sante_pro_score:
+            return "Contrat Santé Particulier"
+        elif contrat_sante_pro_score > contrat_sante_part_score:
+            return "Contrat Santé Professionnel"
+        else:
+            return "Contrat Santé"
     elif contrat_iard_score > contrat_sante_score and contrat_iard_score > contrat_assurance_vie_score:
         return "Contrat IARD"
     elif contrat_assurance_vie_score > contrat_sante_score and contrat_assurance_vie_score > contrat_iard_score:
         return "Contrat Assurance Vie"
     else:
         return "Type de contrat indéterminé"
-    
 
 
 """le directory fdp
@@ -324,26 +352,43 @@ def process_document(file_name):
         print(f"Une exception s'est produite lors du traitement du fichier : {file_name} - {e}")
 
 
-
-nlp = spacy.load('fr_core_news_sm')
-stopwords = spacy.lang.fr.stop_words.STOP_WORDS
-
-
 def remove_stopwords(text):
     doc = nlp(text)
     tokens = [token.text for token in doc if token.text.lower() not in stopwords]
     return " ".join(tokens)
 
+nlp = spacy.load('fr_core_news_sm')
+stopwords = spacy.lang.fr.stop_words.STOP_WORDS
 
 
 
 
-file_names = ['etude_tarifaire_sante_logo_(1).pdf','etude_tarifaire_sante_logo_(2).pdf']
 
-for file_name in file_names:
-     process_document(file_name)
+
+"""
+    Je vais mettre la suite en commenttaire mais le fichier test by word est parfait 
+    Si besoin pour le reendre parfait a nouveau il suffit d'enlever les commentaire a for file name et file_names
+    
+"""
+# file_names = ['etude_tarifaire_sante_logo_(1).pdf','etude_tarifaire_sante_logo_(2).pdf']
+
+# for file_name in file_names:
+#      process_document(file_name)
     
     
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
