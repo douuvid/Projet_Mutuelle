@@ -1,7 +1,7 @@
 import os
 import ocrmypdf
 import pandas as pd
-
+import pytesseract
 
 import fitz
 
@@ -297,10 +297,30 @@ def extract_text_and_tables(ocr_file_path, file_path):
             print("Contenu du tableau:")
             for table in tables:
                 print(table)
+            
             print("")
 
     return extracted_text
 
+
+def extract_text_and_tables_csv(ocr_file_path, file_path):
+    # Extraction du texte OCRed en utilisant PyMuPDF (fitz)
+    doc = fitz.open(ocr_file_path)
+    text = ""
+    for page in doc:
+        text += page.get_text()
+
+    # Détection et extraction des tableaux en utilisant tabula
+    tables = tabula.read_pdf(file_path, pages='all')
+
+    # Création d'un DataFrame pandas à partir des tables extraites
+    df_tables = pd.concat(tables)
+
+    # Sauvegarde du DataFrame dans un fichier CSV
+    csv_file_path = f'./Contrat/Tableau garanties/tables_extracted.csv'
+    df_tables.to_csv(csv_file_path, index=False)
+
+    return csv_file_path
 
 
 ##Analyse des mots, détermination du type de document et affichage du contenu OCR
@@ -314,6 +334,7 @@ def process_document(file_name):
 
         # Extraction du texte OCRed et détection des tableaux
         extracted_text = extract_text_and_tables(ocr_file_path, file_path)
+        extracted_text_csv = extract_text_and_tables_csv(ocr_file_path, file_path)
 
         # Analyse des mots
         
