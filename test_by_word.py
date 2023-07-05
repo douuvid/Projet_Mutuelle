@@ -1,7 +1,7 @@
 import os
 import ocrmypdf
 import pandas as pd
-import pytesseract
+import numpy as np
 
 import fitz
 
@@ -98,7 +98,7 @@ def test_by_word(text, number):
 
         print(f"Document numéro: {number}")
         print("")
-        print(my_list)
+        #print(my_list)
         return my_list
 
     except Exception as e:
@@ -294,13 +294,13 @@ def extract_text_and_tables(ocr_file_path, file_path):
         if len(tables) > 0:
             print(f"Tableau détecté sur la page {page.number + 1} du document {os.path.basename(file_path)}\n")
 
-            print("Contenu du tableau:")
-            for table in tables:
-                print(table)
-            
-            print("")
+            # print("Contenu du tableau:")
+            # for table in tables:
+            #     print(table)
+            # print("")
 
     return extracted_text
+
 
 
 def extract_text_and_tables_csv(ocr_file_path, file_path):
@@ -313,17 +313,51 @@ def extract_text_and_tables_csv(ocr_file_path, file_path):
     # Détection et extraction des tableaux en utilisant tabula
     tables = tabula.read_pdf(file_path, pages='all')
 
-    # Création d'un DataFrame pandas à partir des tables extraites
-    df_tables = pd.concat(tables)
+    # Suppression des colonnes "Unnamed" de chaque table
+    Unnameds = ["Unnamed: 0", "Unnamed:0", "Unnamed:", "Unnamed"]
+    tables_without_unnamed = []
+    for table in tables:
+        for Unnamed in Unnameds:
+            if Unnamed in table.columns:
+                table = table.drop(Unnamed, axis=1)
+       
+       
+       # Détection des cellules vides dans le tableau
+        empty_cells = table.isnull()
+        print("Cellules vides détectées dans le tableau:")
+        print(empty_cells)
+        
+        # Suppression des cellules vides et décalage des cellules suivantes
+        table = table.fillna(method='ffill')
+        
+        tables_without_unnamed.append(table)
 
-    # Sauvegarde du DataFrame dans un fichier CSV
-    csv_file_path = f'./Contrat/Tableau garanties/tables_extracted.csv'
-    df_tables.to_csv(csv_file_path, index=False)
+    dossier_result = "./Contrat/Result_tableau"
+    if not os.path.exists(dossier_result):
+        os.makedirs(dossier_result)
 
-    return csv_file_path
 
+# # Utilisation de la première cellule comme nom de fichier
+#         first_cell = table.iloc[0, 0]
+#         csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
+#         table.to_csv(csv_file_path, index=False)
+        
+        
+    # Sauvegarde de chaque tableau dans un fichier CSV séparé
+    for i, table in enumerate(tables_without_unnamed):
+        # Réorganisez et nettoyez les données du tableau ici
+        #table = table.dropna(axis='rows', how='all')
+        
+        csv_file_path = f'./Contrat/Result_tableau/table_{i+1}.csv'
+        table.to_csv(csv_file_path, index=False)
+
+    return os.path.dirname(csv_file_path)
+    
 
 ##Analyse des mots, détermination du type de document et affichage du contenu OCR
+
+
+
 def process_document(file_name):
     try:
         # Chemin complet du fichier PDF
@@ -359,8 +393,8 @@ def process_document(file_name):
                 with open(ocr_file_path, 'rb') as f:
                     content = f.read().decode(encoding)
                 print(f"Contenu du document OCR ({encoding}): {file_name}")
-                print(content)
-                print("")
+                # print(content)
+                # print("")
                 break
             except UnicodeDecodeError:
                 return word_list
@@ -373,6 +407,7 @@ def process_document(file_name):
         print(f"Une exception s'est produite lors du traitement du fichier : {file_name} - {e}")
 
 
+
 def remove_stopwords(text):
     doc = nlp(text)
     tokens = [token.text for token in doc if token.text.lower() not in stopwords]
@@ -383,6 +418,16 @@ stopwords = spacy.lang.fr.stop_words.STOP_WORDS
 
 
 
+
+def reduire_tableau(table, table_path):
+    # Supprimer les cellules vides de la première colonne du tableau
+    table[0] = table[0].drop()
+
+    # Sauvegarder le tableau modifié dans le fichier CSV d'origine
+    table.to_csv(table_path, index=False)
+
+    # Afficher le chemin du tableau modifié
+    print(f"Le tableau a été réduit et sauvegardé : {table_path}")
 
 
 
@@ -397,7 +442,6 @@ stopwords = spacy.lang.fr.stop_words.STOP_WORDS
 #      process_document(file_name)
     
     
-
 
 
 

@@ -13,10 +13,6 @@
 
 ### determiner le meilleur contrat en fonction  de la demande
 
-
-
-
-
 #===>ok fdp
 
 
@@ -89,7 +85,7 @@ def inclus_or_exclus(contrat_1, contrat_2):
 
 
 
-file_names = ['etude_tarifaire_sante_logo_(1).pdf', 'etude_tarifaire_sante_logo_(2).pdf']
+file_names = ['etude_tarifaire_sante_logo_(1).pdf']
 
 # Traiter chaque fichier
 for file_name in file_names:
