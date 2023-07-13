@@ -9,21 +9,7 @@ import tabula
 import re
 import spacy
 
-"""_Bibliotheque _
-Os permet==> d'interagir avec le système d'exploitation,
-ocrmypdf est utilisé pour effectuer l'OCR (reconnaissance optique de caractères) sur les fichiers PDF,
-pandas est une bibliothèque pour la manipulation de données, 
-fitz est utilisé pour extraire le texte d'un fichier PDF, 
-tabula est utilisé pour détecter et extraire les tableaux d'un fichier PDF
-re est utilisé pour effectuer des opérations de recherche et de correspondance de motifs (regex).
 
-
-   
-"""
-
- 
-
-# Definition of the list of excluded words
 black_list = ["de", "la", "par", "et", "le", "des",
               "à", "les", "au", "en", "du", "ou",
               "est", "l", "dans", "pour", "dont",
@@ -331,12 +317,25 @@ def extract_text_and_tables_csv(ocr_file_path, file_path):
         table = table.fillna(method='ffill')
         
         tables_without_unnamed.append(table)
+        
+        
+        # first_cell = table.iloc[0, 0]
+        # csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
+        # table.to_csv(csv_file_path, index=False)
 
     dossier_result = "./Contrat/Result_tableau"
     if not os.path.exists(dossier_result):
         os.makedirs(dossier_result)
 
+    """
+    Il y a une fonc tion qui est a faire qui permettrait de recupere les 
+    nom de table pour les utiliser comme nom 
+    Elle se call name_csv_by_first_celule
+    Juste en bas donc a faire 
+    
+    """
 
+    
 # # Utilisation de la première cellule comme nom de fichier
 #         first_cell = table.iloc[0, 0]
 #         csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
@@ -347,8 +346,10 @@ def extract_text_and_tables_csv(ocr_file_path, file_path):
     for i, table in enumerate(tables_without_unnamed):
         # Réorganisez et nettoyez les données du tableau ici
         #table = table.dropna(axis='rows', how='all')
+        first_column_name = table.columns[0]
         
-        csv_file_path = f'./Contrat/Result_tableau/table_{i+1}.csv'
+        
+        csv_file_path = f'./Contrat/Result_tableau/table_{first_column_name}.csv'
         table.to_csv(csv_file_path, index=False)
 
     return os.path.dirname(csv_file_path)
@@ -415,6 +416,31 @@ def remove_stopwords(text):
 
 nlp = spacy.load('fr_core_news_sm')
 stopwords = spacy.lang.fr.stop_words.STOP_WORDS
+
+
+
+def name_csv_by_first_celule(table):
+    first_cell = table.iloc[0, 0]
+    csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
+    table.to_csv(csv_file_path, index=False)
+    
+    return table
+# # Utilisation de la première cellule comme nom de fichier
+#         first_cell = table.iloc[0, 0]tttt
+#         csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
+#         table.to_csv(csv_file_path, index=False)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
