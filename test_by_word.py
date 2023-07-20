@@ -289,73 +289,93 @@ def extract_text_and_tables(ocr_file_path, file_path):
 
 
 
+
+
 def extract_text_and_tables_csv(ocr_file_path, file_path):
-    # Extraction du texte OCRed en utilisant PyMuPDF (fitz)
     doc = fitz.open(ocr_file_path)
     text = ""
     for page in doc:
         text += page.get_text()
 
-    # Détection et extraction des tableaux en utilisant tabula
     tables = tabula.read_pdf(file_path, pages='all')
+    
 
-    # Suppression des colonnes "Unnamed" de chaque table
     Unnameds = ["Unnamed: 0", "Unnamed:0", "Unnamed:", "Unnamed"]
     tables_without_unnamed = []
+
     for table in tables:
         for Unnamed in Unnameds:
             if Unnamed in table.columns:
                 table = table.drop(Unnamed, axis=1)
-       
-       
-       # Détection des cellules vides dans le tableau
+        
+
         empty_cells = table.isnull()
         print("Cellules vides détectées dans le tableau:")
         print(empty_cells)
-        
-        # Suppression des cellules vides et décalage des cellules suivantes
+
         table = table.fillna(method='ffill')
-        
+
+        # if table.columns[0] == "Hospitalisation (y compris Maternité)":
+        #     # merged_value = table.iloc[2, 0] + " " + table.iloc[3, 0]
+        #     # table.iloc[2, 0] = merged_value
+        #     # table = table.drop(3, axis=0)
+            
+        #     #objectif faire cible la celule avec iat https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.iat.html
+        #     # Faire remonter le celule precedente 
+            
+        #     merged_value = table.iat[1, 0] + " " + table.iat[2, 0]
+        #     table.iat[1, 0] = merged_value
+        #     table = table.drop([2], axis=0)
+
+    
+
+
+        #     # merged_value_2 = " ".join(table.iloc[5:8, 0].tolist())
+        #     # table.iloc[5:8, 0] = merged_value_2
+        #     # table = table.drop([6, 7], axis=0)
+
         tables_without_unnamed.append(table)
-        
-        
-        # first_cell = table.iloc[0, 0]
-        # csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
-        # table.to_csv(csv_file_path, index=False)
 
     dossier_result = "./Contrat/Result_tableau"
     if not os.path.exists(dossier_result):
         os.makedirs(dossier_result)
 
-    """
-    Il y a une fonc tion qui est a faire qui permettrait de recupere les 
-    nom de table pour les utiliser comme nom 
-    Elle se call name_csv_by_first_celule
-    Juste en bas donc a faire 
-    
-    """
-
-    
-# # Utilisation de la première cellule comme nom de fichier
-#         first_cell = table.iloc[0, 0]
-#         csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
-#         table.to_csv(csv_file_path, index=False)
-        
-        
-    # Sauvegarde de chaque tableau dans un fichier CSV séparé
     for i, table in enumerate(tables_without_unnamed):
-        # Réorganisez et nettoyez les données du tableau ici
-        #table = table.dropna(axis='rows', how='all')
         first_column_name = table.columns[0]
-        
-        
-        csv_file_path = f'./Contrat/Result_tableau/table_{first_column_name}.csv'
+        csv_file_path = f'./Contrat/Result_tableau/{first_column_name}.csv'
         table.to_csv(csv_file_path, index=False)
 
     return os.path.dirname(csv_file_path)
+
+
+
+
+
+
+
     
 
 ##Analyse des mots, détermination du type de document et affichage du contenu OCR
+
+
+
+
+
+# def process_tables(tables):
+#     for table in tables:
+#         process_table(table)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -419,22 +439,60 @@ stopwords = spacy.lang.fr.stop_words.STOP_WORDS
 
 
 
-def name_csv_by_first_celule(table):
-    first_cell = table.iloc[0, 0]
-    csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
-    table.to_csv(csv_file_path, index=False)
-    
-    return table
-# # Utilisation de la première cellule comme nom de fichier
-#         first_cell = table.iloc[0, 0]tttt
-#         csv_file_path = f'./Contrat/Result_tableau/{first_cell}.csv'
-#         table.to_csv(csv_file_path, index=False)
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def collect_csv_files(directory):
+#     csv_files = {}
+#     for filename in os.listdir(directory):
+#         if filename.endswith(".csv"):
+#             file_path = os.path.join(directory, filename)
+#             with open(file_path, "r") as file:
+#                 csv_content = file.read()
+#                 csv_files[filename] = csv_content
+#                 print(f"Nom du fichier CSV : {filename}")
+#     return csv_files
+
+
+
+
+
+
+
+# csv_files = collect_csv_files("./Contrat/Result_tableau")
+
+# for filename, content in csv_files.items():
+#     # Traitez chaque fichier CSV individuellement ici
+#     print(f"Nom du fichier : {filename}")
+#     print("Contenu du fichier :")
+#     print(content)
+#     print("")  # Ligne vide pour séparer les fichiers
 
 
 
@@ -481,13 +539,7 @@ def reduire_tableau(table, table_path):
 
 
 
-
-
-## Il faut fare un contrat qui compare deux contrats entre par type de contrat 
-## Pour qu'on puisse comparer des des banane avec des banane 
-
-
-
+ 
 
 # def compare_type_contrat(file_names):
 #     types_contrat = {}  # Dictionnaire pour regrouper les contrats par type
